@@ -122,6 +122,7 @@
 		b.setBoardTitle(boardRs.getString("board_title"));
 		b.setCreatedate(boardRs.getString("createdate"));
 		boardList.add(b);
+		
 	}
 	//디버깅
 	System.out.println(boardList.size());
@@ -130,6 +131,7 @@
 		System.out.println(b.getBoardTitle());
 		System.out.println(b.getBoardNo());
 	}
+	
 %>  
 <!DOCTYPE html>
 <html>

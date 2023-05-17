@@ -132,7 +132,6 @@
 		System.out.println(b.getBoardNo());
 	}
 	
-	
 %>  
 <!DOCTYPE html>
 <html>

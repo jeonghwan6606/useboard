@@ -12,9 +12,8 @@
 	if(request.getParameter("currentPage")!=null){
 		currentPage = Integer.parseInt(request.getParameter("currentPage"));
 	}
-	System.out.println(currentPage+"<-currentpage");
-	int rowPerPage = 10;
-	int startRow =  (currentPage-1)*rowPerPage; 
+
+	
 	//String 형태로 요청값 변환하기
 	String localName = "전체"; //"SELECT '전체' localName 위에서 설정한 colum 명 활용
 	if(request.getParameter("localName")!=null){
@@ -28,11 +27,46 @@
 	String dbpw = "java1234";
 	Class.forName(driver);
 	Connection conn = null;
+	conn = DriverManager.getConnection(dburl, dbuser, dbpw);
+	
+	//paging 모델
+	int totalRow = 0;
+	String totalRowSql = "select count(*) from board";
+	PreparedStatement totalRowStmt = conn.prepareStatement(totalRowSql);
+	ResultSet totalRowRs = totalRowStmt.executeQuery();
+	if(totalRowRs.next()){
+		totalRow = totalRowRs.getInt(1); //index 1사용
+	}
+	
+	int rowPerPage = 10;
+	int startRow = (currentPage-1)*rowPerPage+1;
+	int endRow = startRow + (rowPerPage-1);
+	if(endRow> totalRow){
+		endRow = totalRow;
+	}
+	
+	//페이지 네비게이션 페이징 
+	int pagePerPage = 10;
+			/*(cp-1)/ paperPerPage * paperPage+1 --> minPage
+			minPage + (pagePerPage-1) --> maxPage
+			maxPage > lastPage --> maxPage = lastPage
+			*/	
+			
+	int lastPage = totalRow / rowPerPage;
+	if(totalRow%rowPerPage != 0){
+			lastPage = lastPage + 1;
+		}
+			
+	//페이지 네비게이션 페이징 
+	int minPage = (((currentPage-1)/pagePerPage)*pagePerPage) +1;
+	int maxPage = minPage + (pagePerPage-1);
+	if(maxPage > lastPage){
+			maxPage = lastPage;
+	}
 	
 	//2-1) 서브메뉴 결과셋(모델) 
 	PreparedStatement subMenuStmt = null ;
 	ResultSet subMenuRs = null;
-	conn = DriverManager.getConnection(dburl, dbuser, dbpw);
 	/*
     SELECT '전체' localName , COUNT(local_name) cnt FROM board
 	UNION ALL
@@ -96,18 +130,9 @@
 		System.out.println(b.getBoardTitle());
 		System.out.println(b.getBoardNo());
 	}
-	//2-3)세번째 last page 구하는 결과셋(모델)
-	//Select count(*) totalCount from board
-	PreparedStatement cntStmt = conn.prepareStatement("Select count(*) totalCount from board");
-	ResultSet cntRs = cntStmt.executeQuery();
-	int totalRow = 0; 
-	if(cntRs.next()){
-		totalRow = cntRs.getInt("totalCount");
-	}
-	int lastPage =totalRow / rowPerPage;
-	if(totalRow% rowPerPage !=0){ //페이지당 row로 전체 row가 떨어지지 않는경우 마지막 페이지 +1 로 넘겨준다 
-		lastPage = lastPage +1;
-	}
+
+	
+	
 %>  
 <!DOCTYPE html>
 <html>
@@ -224,23 +249,36 @@
 						<%
 							}
 						%>
-					</table>	
+					</table>
 					<div style="text-align:center;">
 						<%
-							if(currentPage>1){
-						%>
-								<a  class="btn btn-outline-dark" href="<%=request.getContextPath()%>/home.jsp?currentPage=<%=currentPage-1%>&localName=<%=localName%>">이전</a>
-						<%
-							}
-						%>
-							<%=currentPage%>
+							if(minPage > 1){
+
+						%>	
+								<a  class="btn btn-outline-dark" href="<%=request.getContextPath()%>/home.jsp?currentPage=<%=minPage-pagePerPage%>">이전</a>&nbsp;
 						<% 	
-							if(currentPage <lastPage) {
+									
+								}
+								
+								for(int i = minPage; i<=maxPage; i=i+1){
+									if(i== currentPage){
+										%>
+													<span  style= "background-color:yellow"><%=i%></span>
+										<% 
+									}else{
+						%>	
+										<a href= "<%=request.getContextPath()%>/home.jsp?currentPage=<%=i%>"><%=i%></a>&nbsp;
+						<% 
+									}
+								}
+								
+								if(maxPage != lastPage){
 						%>
-								<a class="btn btn-outline-dark" href="<%=request.getContextPath()%>/home.jsp?currentPage=<%=currentPage+1%>&localName=<%=localName%>">다음</a>
-						<%
-							}
+									<a class="btn btn-outline-dark" href="<%=request.getContextPath()%>/home.jsp?currentPage=<%=minPage+pagePerPage%>">다음</a>&nbsp;
+						<% 	
+								}
 						%>
+
 					</div>
 				</div>
 			</div>		

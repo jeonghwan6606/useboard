@@ -285,7 +285,8 @@
 	      			<th>수정</th>
 	      			<th>삭제</th>
 	      		</tr>
-	      		<% if(commentAction==null){
+	      		<% if(commentAction==null){ // 처음 댓글 수정을 눌렀을 시에만, commentAction 이라는 매개값 지정해서
+	      									//action.jsp 보낸 후 다시 해당 매개값 가져오면(commentaction이 null이 아니게 되면) 수정가능영역 표시
 		      			for(Comment c: commentList){
 		      	%>
 			      		<tr>

@@ -17,7 +17,7 @@
    }
    
    String commentAction = null; //commentAction 초기화
-   if(request.getParameter("commentAction")!=null){
+   if(request.getParameter("commentAㄴction")!=null){
 	      commentAction = request.getParameter("commentAction");
    }
    

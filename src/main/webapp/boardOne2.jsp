@@ -40,7 +40,7 @@
       
    ////2. 모델계층
    String driver="org.mariadb.jdbc.Driver";
-   String dburl="jdbc:mariadb://127.0.0.1:3306/userboard";
+   String dburl="jdbc:mariadb://3.38.38.146/userboard";
    String dbuser="root";
    String dbpw = "java1234";
    Class.forName(driver);
@@ -105,7 +105,7 @@
 		WHERE board_no = 900
 		LIMIT 0,10;
       */
-   String commentListSql = "SELECT comment_no, board_no, comment_content, member_id, createdate, updatedate FROM COMMENT WHERE board_no = ? LIMIT ?,?";
+   String commentListSql = "SELECT comment_no, board_no, comment_content, member_id, createdate, updatedate FROM comment WHERE board_no = ? LIMIT ?,?";
   	commentListStmt = conn.prepareStatement(commentListSql);
   	commentListStmt.setInt(1,boardNo);
   	commentListStmt.setInt(2,startRow);

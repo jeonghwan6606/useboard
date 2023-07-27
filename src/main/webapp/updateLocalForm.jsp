@@ -16,7 +16,7 @@
 	}
 	
 	Class.forName("org.mariadb.jdbc.Driver");
-	java.sql.Connection conn  = DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3306/userboard","root","java1234");
+	java.sql.Connection conn  = DriverManager.getConnection("jdbc:mariadb://3.38.38.146/userboard","root","java1234");
 	
 	//요청값 변환하기
 	String localName = request.getParameter("localName");

@@ -49,7 +49,7 @@
 	
 	//디버깅
 	String driver="org.mariadb.jdbc.Driver";
-	String dburl="jdbc:mariadb://127.0.0.1:3306/userboard";
+	String dburl="jdbc:mariadb://3.38.38.146/userboard";
 	String dbuser="root";
 	String dbpw = "java1234";
 	Class.forName(driver);
